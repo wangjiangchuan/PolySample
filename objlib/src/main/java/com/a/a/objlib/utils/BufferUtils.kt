@@ -42,5 +42,10 @@ class BufferUtils() : TypesDefine() {
             buffer.flip()
             return buffer
         }
+
+        fun createByteBuffer(size : Int) : ByteBuffer {
+            val buffer = ByteBuffer.allocateDirect(size).order(ByteOrder.nativeOrder())
+            return buffer
+        }
     }
 }

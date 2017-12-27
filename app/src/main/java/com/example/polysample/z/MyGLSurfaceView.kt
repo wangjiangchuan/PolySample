@@ -16,6 +16,7 @@ import javax.microedition.khronos.egl.EGLContext
 import javax.microedition.khronos.egl.EGLDisplay
 import android.content.pm.ConfigurationInfo
 import android.app.ActivityManager
+import android.graphics.BitmapFactory
 import com.a.a.objlib.model.Material
 import com.a.a.objlib.utils.Utils
 import com.example.polysample.origin.HelloTriangleRenderer
@@ -28,7 +29,7 @@ class MyGLSurfaceView : GLSurfaceView {
     // The renderer responsible for rendering the contents of this view.
     val renderer: HelloTriangleRenderer
     var renderer2 : TestRender
-    var renderer3 : ObjRender
+    var renderer3 : ObjRender? = null
     constructor(context: Context) : this(context, null) {}
 
     constructor(context: Context, attributeSet: AttributeSet? = null) : super(context, attributeSet) {
@@ -38,16 +39,18 @@ class MyGLSurfaceView : GLSurfaceView {
             throw RuntimeException()
         }
 
+        var bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.diurnal_front)
+
         val vertex = readTextFile(context, R.raw.objvertexshader)
         val fragment = readTextFile(context, R.raw.objfragmentshader)
-        val materials = Material.parseMaterial(Utils.getAssetFileContent("obj.mtl", context.applicationContext))
-        val rawmodel : RawModel = RawModel.parseObj(Utils.getAssetFileContent("test.obj", context.applicationContext))
+//        val materials = Material.parseMaterial(Utils.getAssetFileContent("obj.mtl", context.applicationContext))
+//        val rawmodel : RawModel = RawModel.parseObj(Utils.getAssetFileContent("test.obj", context.applicationContext))
 
-        renderer3 = ObjRender(ObjModel(rawmodel, vertex, fragment, materials))
+//        renderer3 = ObjRender(ObjModel(rawmodel, vertex, fragment, materials))
 
         renderer = HelloTriangleRenderer(context)
-        renderer2 = TestRender(vertex, fragment)
-        setRenderer(renderer3)
+        renderer2 = TestRender(readTextFile(context, R.raw.testvertex), readTextFile(context, R.raw.testfragment), bitmap)
+        setRenderer(renderer2)
     }
 
     companion object {
